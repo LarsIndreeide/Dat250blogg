@@ -7,9 +7,9 @@
 {% block content %}
   <form method="post">
     <label for="username">Username</label>
-    <input name="username" id="username" pattern="[0-9a-fA-F]" required>
+    <input name="username" id="username" required>
     <label for="password">Password</label>
-    <input type="password" name="password" id="password" pattern="[0-9a-fA-F]{8,20}" required>
+    <input type="password" name="password" id="password" required>
     <input type="submit" value="Register">
   </form>
 {% endblock %}
