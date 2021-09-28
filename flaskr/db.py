@@ -1,4 +1,4 @@
-import sqlite3
+'|1eimport sqlite3
 
 import click
 from flask import current_app, g
