@@ -1,23 +1,12 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, 
+    Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from werkzeug.utils import secure_filename
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg'}
-
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 bp = Blueprint('blog', __name__)
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route('/')
 def index():
@@ -41,19 +30,6 @@ def create():
 
         if not title:
             error = 'Title is required.'
-
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
 
         if error is not None:
             flash(error)
@@ -120,4 +96,4 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('blog.index'))
+    return redirect(url_for('blog.index')) 
