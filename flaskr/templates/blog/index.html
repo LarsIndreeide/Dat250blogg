@@ -1,29 +1,91 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Posts{% endblock %}</h1>
+  <div class="mx-auto" style="width: 1800px;">
+<h1>{% block title %}For Sale{% endblock %}</h1>
   {% if g.user %}
+  
     <a class="action" href="{{ url_for('blog.create') }}">New</a>
+  </div>
   {% endif %}
 {% endblock %}
 
+
+
 {% block content %}
+
+
+
+
+
+
+
   {% for post in posts %}
     <article class="post">
       <header>
-        <div>
+        <div class="mx-auto" style="width: 1600px;">
           <h1>{{ post['title'] }}</h1>
           <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == post['author_id'] %}
+        <div class="mx-auto" style="width: 1600px;">
           <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        </div>
         {% endif %}
       </header>
+      <div class="mx-auto" style="width: 1600px;">
       <p class="body">{{ post['body'] }}</p>
-      <p class="body2">{{ post['body2'] }}</p>
+
+      </div>
     </article>
+    <div class="mx-auto" style="width: 1600px;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ post['id'] }}">
+      Read More
+    </button>
+    </div>
+
+<div class="modal fade" id="{{ post['id'] }}" tabindex="-1" role="dialog" aria-labelledby="{{ post['id'] }}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="{{ post['id'] }}">{{ post['title'] }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+      
+      <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+      
+      {% if g.user['id'] == post['author_id'] %}
+        <div class="mx-auto" style="width: 1600px;">
+          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        </div>
+      {% endif %}
+      <hr>
+      <p class="body">{{ post['body'] }}</p>
+
+      <p class="body2">{{ post['body2'] }}</p>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit comment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     {% if not loop.last %}
       <hr>
     {% endif %}
+    
+
+
   {% endfor %}
 {% endblock %}
+
+<!-- https://getbootstrap.com/docs/4.0/components/modal/ for post innhold, https://freefrontend.com/bootstrap-comments/ for comments -->
