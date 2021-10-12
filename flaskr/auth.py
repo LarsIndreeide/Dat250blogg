@@ -93,3 +93,31 @@ def login_required(view):
 @bp.route('/about')
 def about():
     return render_template('auth/about.html')
+
+
+
+
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+        body2 = request.form['body2']
+        pris = request.form['pris']
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO post (title, body, body2, pris, author_id)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (title, body, body2, pris, g.user['id'])
+            )
+            db.commit()
+            return redirect(url_for('blog.index'))
+
+    return render_template('blog/create.html')

@@ -16,7 +16,12 @@ def index():
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('blog/index.html', posts=posts)
+    comments = db.execute(
+        'SELECT *'
+        ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
+        ' ORDER BY cCreated DESC'
+        ).fetchall()
+    return render_template('blog/index.html', posts=posts, comments=comments)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -99,3 +104,18 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index')) 
+
+@bp.route('/index', methods=('GET', 'POST'))
+@login_required
+def post_comment(id):
+    postid = get_post(id)
+    if request.method == 'COMMENT':
+        db = get_db()
+        db.execute(
+            'INSERT INTO comment (postid, commentid, cAuthor_id, cCreated, comment)'
+            'WHERE postid = ?'
+            ' VALUES (?, ?, ?, ?, ?)',
+            (postid, )
+            
+            )
+        
