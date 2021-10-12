@@ -107,15 +107,24 @@ def delete(id):
 
 @bp.route('/index', methods=('GET', 'POST'))
 @login_required
-def post_comment(id):
-    postid = get_post(id)
-    if request.method == 'COMMENT':
-        db = get_db()
-        db.execute(
-            'INSERT INTO comment (postid, commentid, cAuthor_id, cCreated, comment)'
-            'WHERE postid = ?'
-            ' VALUES (?, ?, ?, ?, ?)',
-            (postid, )
-            
+def post_comment():
+    if request.method == 'POST':
+        commenttext = request.form['commenttext']
+        postid = db.execute('SELECT id FROM post ')
+        error = None
+
+        if not commenttext:
+            error = 'Comment text is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db.execute(
+                'INSERT INTO comment (postid, cAuthor_id, comment)'
+                'WHERE postid = ?'
+                ' VALUES (?, ?, ?)',
+                (postid, g.user['id'], post_comment )
             )
+            db.commit()
+
         
