@@ -35,6 +35,8 @@
       </header>
       <div class="mx-auto" style="width: 1600px;">
       <p class="body">{{ post['body'] }}</p>
+       <hr>
+       <b>Pris:</b><h5 class="pris">{{ post['pris'] }} kr</h5>
 
       </div>
     </article>
@@ -45,10 +47,10 @@
     </div>
 
 <div class="modal fade" id="{{ post['id'] }}" tabindex="-1" role="dialog" aria-labelledby="{{ post['id'] }}" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="{{ post['id'] }}">{{ post['title'] }}</h5>
+        <h3 class="modal-title" id="{{ post['id'] }}">{{ post['title'] }}</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -68,6 +70,7 @@
 
       <p class="body2">{{ post['body2'] }}</p>
 
+      <b>Pris:</b><h5 class="pris">{{ post['pris'] }} kr</h5>
 
       </div>
       <div class="modal-footer">
@@ -77,15 +80,11 @@
     </div>
   </div>
 </div>
-
-
     {% if not loop.last %}
       <hr>
-    {% endif %}
-    
-
-
+    {%  endif %}
   {% endfor %}
+<hr />
 {% endblock %}
 
 <!-- https://getbootstrap.com/docs/4.0/components/modal/ for post innhold, https://freefrontend.com/bootstrap-comments/ for comments -->

@@ -1,15 +1,70 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
+<h1>{% block title %}Register{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
+
+
+
+<form method="post">
+    <div class="mx-auto" style="width: 1400px;">
+        <div class="form-row mb-3">
+            <div class="col">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
+            </div>
+            <div class="col">
+                <label for="password">Password</label>
+                <input type="Password" class="form-control" name="password" id="password" required placeholder="Password">
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <div class="col">
+                <label for="email">E-Mail</label>
+                <input type="text" class="form-control" id="email" placeholder="Email">
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#rules">
+                Terms of service &amp; Rules
+            </button>
+
+            <div class="modal fade" id="rules" tabindex="-1" role="dialog" aria-labelledby="ruleslabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ruleslabel">Rules &amp; Terms of service</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <h5>Rules:</h5>  <p> 1. Dont be stupid.</p>   <p>2. Dont be mean. </p> <p>3. Any bodily harm caused by usage of this website is Runars fault.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Accept</button>
+                            <button type="button" class="btn btn-secondary">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class=" form-row mb-3">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="ruleslol">
+                <label class="custom-control-label" for="ruleslol">I have read the terms of service, and agree to the rules.</label>
+            </div>
+        </div>
+
+        <div class=" form-row mb-3">
+            <button type="submit" value="Register" class="btn btn-primary">Register</button>
+        </div>
+    </div>
+</form>
+
+
+
+
 {% endblock %}

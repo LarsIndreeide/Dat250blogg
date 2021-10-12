@@ -26,6 +26,7 @@ def create():
         title = request.form['title']
         body = request.form['body']
         body2 = request.form['body2']
+        pris = request.form['pris']
         error = None
 
         if not title:
@@ -36,9 +37,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, body2, author_id)'
-                ' VALUES (?, ?, ?, ?)',
-                (title, body, body2, g.user['id'])
+                'INSERT INTO post (title, body, body2, pris, author_id)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (title, body, body2, pris, g.user['id'])
             )
             db.commit()
             return redirect(url_for('blog.index'))
@@ -70,6 +71,7 @@ def update(id):
         title = request.form['title']
         body = request.form['body']
         body2 = request.form['body2']
+        pris = request.form['pris']
         error = None
 
         if not title:
@@ -80,9 +82,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?, body2 = ?'
+                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?'
                 ' WHERE id = ?',
-                (title, body, body2, id)
+                (title, body, body2, pris, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))

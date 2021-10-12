@@ -14,5 +14,7 @@ CREATE TABLE post (
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   body2 TEXT NOT NULL,
+  pris TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
+

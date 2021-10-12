@@ -1,22 +1,47 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}New Post{% endblock %}</h1>
+<h1>{% block title %}New Post{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
+<form method="post">
+    <div class="mx-auto" style="width: 1600px;">
+        <div class="row mb-3">
+            <label for="title" class="col-sm-2 col-form-label col-form-label-lg">Post Title</label>
+            <div class="col-sm-10">
+                <input name="title" class="form-control" id="title" value="{{ request.form['title'] }}"  maxlength="80" required placeholder="What you're selling">
+            </div>
+        </div>
 
+        <div class="row mb-3">
+            <label for="ShortDesc" class="col-sm-2 col-form-label col-form-label-lg">Short description</label>
+            <div class="col-sm-10"> 
+                <textarea class="form-control" name="body" rows="1" id="body" placeholder="Keep it short and simple. Max 80 characters" maxlength="80">{{ request.form['body'] }}</textarea>
+            </div>
+        </div>
 
+        <div class="row mb-3">
+            <label for="LongDesc" class="col-sm-2 col-form-label col-form-label-lg">Long Description</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" name="body2" rows="3" id="body2" placeholder="This is where we want details about the item you're trying to sell." maxlength="1000">{{ request.form['body'] }}</textarea>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <label for="pris" class="col-sm-2 col-form-label col-form-label-lg">Price</label>
+            <div class="col-sm-3">
+                <textarea class="form-control" name="pris" rows="1" id="pris" placeholder="This is where we expect a price, or price range." maxlength="10">{{ request.form['pris']}}</textarea>
+            </div>
+            <div class="col-sm-1">
+                <b>Upload picture</b>
+            </div>
+            <div><input class="form-control" type="file" id="formFile"></div>
+        </div>
 
-
-  <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
-    <label for="body2">Body2</label>
-    <textarea name="body2" id="body2">{{ request.form['body2'] }}</textarea>
-    
-    <input type="submit" value="Save">
-  </form>
+        <div class="row">
+            <input type="submit" value="Save">
+        </div>
+    </div>
+</form>
 {% endblock %}
