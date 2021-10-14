@@ -1,3 +1,4 @@
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -8,9 +9,18 @@ from flaskr.db import get_db
 
 bp = Blueprint('blog', __name__)
 
-@bp.route('/')
+
+
+UPLOAD_FOLDER = '/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg'} #Ville egentlig hatt ekstra sikkerhet her, strippet jpgs for metadata on upload, man kan ha malicious code i jpgs. 
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@bp.route('/' , methods=('GET', 'POST', 'COMMENT'))
 def index():
-    db = get_db()
+    db = get_db( )
     posts = db.execute(
         'SELECT *'
         ' FROM post p JOIN user u ON p.author_id = u.id'
@@ -21,7 +31,60 @@ def index():
         ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
         ).fetchall()
-    return render_template('blog/index.html', posts=posts, comments=comments)
+    print(comments)
+    if request.method == 'POST':
+        ctext = request.form['commenttext']
+
+        for post in posts:
+            print(post)
+
+        error = None
+
+        if not ctext:
+            error = 'Comment text is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO comment (commenttext, postid, cAuthor_id)'
+                ' VALUES (?, ?, ?)',
+                (ctext, g.user['id'], g.user['id'])
+            )
+            db.commit()
+            return render_template('blog/index.html', posts=posts, comments=comments)
+    else:
+        return render_template('blog/index.html', posts=posts, comments=comments)
+
+
+"""
+@bp.route('/', methods=['GET', 'COMMENT'])
+@login_required
+def post_comment():
+    db = get_db()
+    print("lol")
+    if request.method == 'COMMENT':
+        ctext = request.form['commenttext']
+
+        postid = db.execute('SELECT id FROM post ')
+        error = None
+
+        if not ctext:
+            error = 'Comment text is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO comment (commenttext, postid, cAuthor_id)'
+                ' VALUES (?, ?, ?)',
+                (ctext, postid, g.user['id'])
+            )
+            db.commit()
+            return
+"""
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -32,7 +95,8 @@ def create():
         body = request.form['body']
         body2 = request.form['body2']
         pris = request.form['pris']
-        error = None
+        fil = request.files['file']
+        error = None 
 
         if not title:
             error = 'Title is required.'
@@ -44,9 +108,28 @@ def create():
             db.execute(
                 'INSERT INTO post (title, body, body2, pris, author_id)'
                 ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, body2, pris, g.user['id'])
+                (title, body, body2, pris, g.user['id'] )
             )
             db.commit()
+            
+
+            return redirect(url_for('blog.index'))
+
+        if 'file' not in request.files:
+            flash('No file part')
+            
+
+        if fil.filename == '':
+            flash('No image selected for uploading')
+            return redirect(url_for('blog.index'))
+
+        if fil and allowed_file(file.filename):
+            filename = 
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('blog/index.html', filename=filename)
+
+        else:
+            flash('Allowed image types are - png, jpg')
             return redirect(url_for('blog.index'))
 
     return render_template('blog/create.html')
@@ -105,26 +188,3 @@ def delete(id):
     db.commit()
     return redirect(url_for('blog.index')) 
 
-@bp.route('/index', methods=('GET', 'POST'))
-@login_required
-def post_comment():
-    if request.method == 'POST':
-        commenttext = request.form['commenttext']
-        postid = db.execute('SELECT id FROM post ')
-        error = None
-
-        if not commenttext:
-            error = 'Comment text is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db.execute(
-                'INSERT INTO comment (postid, cAuthor_id, comment)'
-                'WHERE postid = ?'
-                ' VALUES (?, ?, ?)',
-                (postid, g.user['id'], post_comment )
-            )
-            db.commit()
-
-        

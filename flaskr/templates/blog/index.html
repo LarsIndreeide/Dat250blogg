@@ -16,10 +16,6 @@
 
 
 
-
-
-
-
   {% for post in posts %}
     <article class="post">
       <header>
@@ -76,19 +72,20 @@
           <hr />
 
           {% for comment in comments%}
+          <div class="modal-body">
             {% if  post['id']  ==  comment['postid']  %}
             <div class="about">by {{comment['username']}} on {{comment['cCreated'].strftime('%Y-%m-%d')}} </div>
             <hr />
-            <p class="form-control">{{ comment['commenttext'] }}</p>
+            <h6 class="form-control">{{ comment['commenttext'] }}</h6>
             {% endif %}
+          </div>
           {% endfor %}
             <form method="post">
-                <textarea class="form-control" name="commentfield" rows="2" id="commentfield" placeholder="Insert Comment here, Remember to keep civil." maxlength="280">{{ request.form['commenttext']}}</textarea>
-
+                <textarea class="form-control" name="commenttext" rows="2" id="commenttext" placeholder="Insert Comment here, Remember to keep civil." maxlength="280"></textarea>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit comment</button>
+                    <button type="submit" class="btn btn-primary" value="save" >Submit comment</button>
                 </div>
             </form>
       </div>
