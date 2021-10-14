@@ -93,3 +93,6 @@ def login_required(view):
 @bp.route('/about')
 def about():
     return render_template('auth/about.html')
+
+
+
