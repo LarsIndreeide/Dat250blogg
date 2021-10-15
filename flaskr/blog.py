@@ -11,13 +11,6 @@ bp = Blueprint('blog', __name__)
 
 
 
-UPLOAD_FOLDER = '/images'
-ALLOWED_EXTENSIONS = {'png', 'jpg'} #Ville egentlig hatt ekstra sikkerhet her, strippet jpgs for metadata on upload, man kan ha malicious code i jpgs. 
-
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @bp.route('/' , methods=('GET', 'POST', 'COMMENT'))
 def index():
     db = get_db( )
@@ -95,7 +88,6 @@ def create():
         body = request.form['body']
         body2 = request.form['body2']
         pris = request.form['pris']
-        fil = request.files['file']
         error = None 
 
         if not title:
@@ -114,24 +106,7 @@ def create():
             
 
             return redirect(url_for('blog.index'))
-
-        if 'file' not in request.files:
-            flash('No file part')
-            
-
-        if fil.filename == '':
-            flash('No image selected for uploading')
-            return redirect(url_for('blog.index'))
-
-        if fil and allowed_file(file.filename):
-            filename = 
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('blog/index.html', filename=filename)
-
-        else:
-            flash('Allowed image types are - png, jpg')
-            return redirect(url_for('blog.index'))
-
+        
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
