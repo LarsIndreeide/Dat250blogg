@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}User Profile{% endblock %}</h1>
+  
+{% endblock %}
+
+{% block content %}
+
+{% if g.user %}
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+      Tooltip on left
+  </button>
+{% else %}
+
+{% endif %}
+
+{% endblock %}

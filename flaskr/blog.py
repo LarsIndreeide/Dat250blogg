@@ -28,10 +28,7 @@ def index():
         ctext = request.form['commenttext']
         ctid = request.form['ctid']
         
-
-        
         error = None
-
 
         if not ctext:
             error = 'Comment text is required.'
@@ -136,6 +133,3 @@ def delete(id):
     db.commit()
     return redirect(url_for('blog.index')) 
 
-
-def profile():
-    return render_template('/profile.html')
