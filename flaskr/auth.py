@@ -30,9 +30,11 @@ def register():
                 db.execute(
                     "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password)),
+                )
+                db.execute(
                     "INSERT INTO email (mail) VALUES (?)",
                     (email,)
-                )
+                    )
                 db.commit()
             except db.IntegrityError:
                 error = f"User {username} or email {email} is already registered."

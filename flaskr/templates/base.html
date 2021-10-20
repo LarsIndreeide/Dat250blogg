@@ -9,77 +9,80 @@
 
 
 <style>
-.jumbotron{
-    background-color:#2E2D88;
-    color:white;
-}
-.navbar-expand{-sm|-md|-lg|-xl}
+    .jumbotron {
+        background-color: #2E2D88;
+        color: white;
+    }
 
-.bg-secondary
+    .navbar-expand {
+        -sm |-md|-lg|-xl
+    }
 
-}
+    .bg-secondary {
+    }
 </style>
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="../">
-    <img src="https://i.imgur.com/Aj2RX3o.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    KS.no
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="../">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth.about') }}">About us</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Categories
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{{url_for('auth.profile')}}">Profile</a>
-          <a class="dropdown-item" href="#"></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Log out</a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="../">
+        <img src="https://i.imgur.com/Aj2RX3o.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        KS.no
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="../">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.about') }}">About us</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{url_for('auth.profile')}}">Profile</a>
+                    <a class="dropdown-item" href="#"></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Log out</a>
+                </div>
         </ul>
-      </li>
-      {% if g.user %}
-       <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-       <span class="navbar-text"
-        >{{ g.user['username'] }}
-      </span>
-      {% else %}
-        <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a> 
-        <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a> 
-      {% endif %}
-      
-        
-     
-  </div>
+        </li>
+        {% if g.user %}
+        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        <span class="navbar-text">
+            {{ g.user['username'] }}
+        </span>
+        {% else %}
+        <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a>
+        <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
+        {% endif %}
+
+
+
+    </div>
 </nav>
 
 
 
 <section class="content">
-  <header>
-  
-    {% block header %}{% endblock %}
-  
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
+    <header>
+
+        {% block header %}{% endblock %}
+
+    </header>
+    {% for message in get_flashed_messages() %}
+    <div class="mx-auto" style="width: 1600px;">
+        <div class="flash">{{ message }}</div>
+    </div>
+    {% endfor %}
+    {% block content %}{% endblock %}
 </section>
-
-
 
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

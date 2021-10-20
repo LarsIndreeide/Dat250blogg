@@ -43,7 +43,7 @@ def index():
                 (ctext, ctid, g.user['id'])
             )
             db.commit()
-            return render_template('blog/index.html', posts=posts, comments=comments)
+            return redirect(url_for('blog.index'))
     else:
         return render_template('blog/index.html', posts=posts, comments=comments)
 
