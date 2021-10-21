@@ -8,11 +8,39 @@
 {% block content %}
 
 {% if g.user %}
-  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
-      Tooltip on left
-  </button>
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Username:   {{ g.user['username'] }}</h1>
+    <p class="lead">mail:{{ g.user['email']}} </p>
+    <p class="lead">
+    <img src="https://cdn.discordapp.com/emojis/771446570553704509.png?size=96" width="60" height="60" class="d-inline-block align-mid" alt="">
+    Sander
+  </p>
+  <p class="lead">
+    <img src="https://cdn.discordapp.com/emojis/689497035161862229.png?size=96" width="60" height="60" class="d-inline-block align-mid" alt="">
+    Lars
+  </p>
+  <p class="lead">
+    <img src="https://cdn.discordapp.com/emojis/692463488429326457.png?size=96" width="60" height="60" class="d-inline-block align-mid" alt="">
+    Runar
+  </p>
+
+
+  <h2 class="display-4">Copyrighted &trade; btws &copy;</h>
+  </div>
+</div>
+
+
+
 {% else %}
 
+
+
+
 {% endif %}
+
+
+
 
 {% endblock %}
