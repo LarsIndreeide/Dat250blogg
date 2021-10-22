@@ -29,6 +29,10 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    @app.route('/slycooper')
+    def tierlist():
+        return 'sly cooper tier list comming soon!'
+
     #return app
 
     from . import db
