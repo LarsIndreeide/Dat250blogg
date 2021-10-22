@@ -11,7 +11,6 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
