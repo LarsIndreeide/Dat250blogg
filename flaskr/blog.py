@@ -7,6 +7,8 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
+
+
 bp = Blueprint('blog', __name__)
 
 
@@ -32,6 +34,7 @@ def index():
 
         if not ctext:
             error = 'Comment text is required.'
+
 
         if error is not None:
             flash(error)

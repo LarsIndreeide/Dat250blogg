@@ -7,6 +7,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 
+import re
+
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -15,15 +18,23 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
+        name = request.form['name']
+        regex = re.compile('(?=^.{12,}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?.*[0-9])(?=.*[|!$%&\/\(\)\?\^\+\*]))^.*')
+        regex2 = re.compile('(?=^.{1,}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?.*[0-9])(?=.*[|!$%&\/\(\)\?\^\+\*\@]))^.*')
         db = get_db()
         error = None
+        if(regex2.search(username),regex2.search(email),regex2.search(name) == 
+            if not username:
+                error = 'Username is required.'
+            elif not password:
+                error = 'Password is required.'
+            elif not email:
+                error = 'Email is required.'
+            elif not name: 
+                error = 'Name is required'
+            elif(regex.search(password)) == None:
+                error = 'Your password needs atleast one special symbol, One number, One uppercase letter, One lower case letter and has a minimum length of 12'
 
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-        elif not email:
-            error = 'Email is required.'
 
         if error is None:
             try:
@@ -32,8 +43,8 @@ def register():
                     (username, generate_password_hash(password)),
                 )
                 db.execute(
-                    "INSERT INTO email (mail) VALUES (?)",
-                    (email,)
+                    "INSERT INTO email (mail, name) VALUES (?, ?)",
+                    (email, name,)
                     )
                 db.commit()
             except db.IntegrityError:
