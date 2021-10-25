@@ -62,7 +62,7 @@ def index():
 
 
 """
-@bp.route('/', methods=['GET', 'COMMENT'])
+@bp.route('/', methods=['GET', 'COMMENT'])ii
 @login_required
 def post_comment():
     db = get_db()
