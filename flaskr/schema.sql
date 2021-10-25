@@ -17,6 +17,7 @@ CREATE TABLE post (
   body TEXT NOT NULL,
   body2 TEXT NOT NULL,
   pris TEXT NOT NULL,
+  file TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
 

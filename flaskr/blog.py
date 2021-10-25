@@ -3,12 +3,22 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
+
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
+ALLOWED_EXTENSIONS = {'png', 'jpg'}
+UPLOAD_FOLDER = ('/templates/blog/images')
 bp = Blueprint('blog', __name__)
 
+
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route('/' , methods=('GET', 'POST', 'COMMENT'))
@@ -36,6 +46,8 @@ def index():
         if error is not None:
             flash(error)
         else:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             db = get_db()
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
@@ -58,6 +70,7 @@ def create():
         body = request.form['body']
         body2 = request.form['body2']
         pris = request.form['pris']
+        file = request.files['file']
         error = None 
 
         if not title:
@@ -65,17 +78,26 @@ def create():
 
         if error is not None:
             flash(error)
-        else:
+
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        elif file and allowed_file(file.filename):
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, body2, pris, author_id)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, body2, pris, g.user['id'] )
+                'INSERT INTO post (title, body, body2, pris, file, author_id)'
+                ' VALUES (?, ?, ?, ?, ?, ?)',
+                (title, body, body2, pris, file.filename, g.user['id'] )
             )
             db.commit()
-            
-
             return redirect(url_for('blog.index'))
+
+
         
     return render_template('blog/create.html')
 
