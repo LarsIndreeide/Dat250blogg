@@ -10,9 +10,10 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 import os
 
+
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 UPLOAD_FOLDER = ('/templates/blog/images')
-bp = Blueprint('blog', __name__)
+
 
 
 
@@ -37,17 +38,15 @@ def index():
         ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
         ).fetchall()
-    print(comments)
     if request.method == 'POST':
         ctext = request.form['commenttext']
-
-        for post in posts:
-            print(post)
-
+        ctid = request.form['ctid']
+        
         error = None
 
         if not ctext:
             error = 'Comment text is required.'
+
 
         if error is not None:
             flash(error)
@@ -56,41 +55,14 @@ def index():
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
                 ' VALUES (?, ?, ?)',
-                (ctext, g.user['id'], g.user['id'])
+                (ctext, ctid, g.user['id'])
             )
             db.commit()
-            return render_template('blog/index.html', posts=posts, comments=comments)
+            return redirect(url_for('blog.index'))
     else:
         return render_template('blog/index.html', posts=posts, comments=comments)
 
 
-"""
-@bp.route('/', methods=['GET', 'COMMENT'])
-@login_required
-def post_comment():
-    db = get_db()
-    print("lol")
-    if request.method == 'COMMENT':
-        ctext = request.form['commenttext']
-
-        postid = db.execute('SELECT id FROM post ')
-        error = None
-
-        if not ctext:
-            error = 'Comment text is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO comment (commenttext, postid, cAuthor_id)'
-                ' VALUES (?, ?, ?)',
-                (ctext, postid, g.user['id'])
-            )
-            db.commit()
-            return
-"""
 
 
 @bp.route('/create', methods=('GET', 'POST'))

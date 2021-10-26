@@ -70,24 +70,33 @@
 
           </div>
           <hr />
-
-          {% for comment in comments%}
           <div class="modal-body">
-            {% if  post['id']  ==  comment['postid']  %}
-            <div class="about">by {{comment['username']}} on {{comment['cCreated'].strftime('%Y-%m-%d')}} </div>
-            <hr />
-            <h6 class="form-control">{{ comment['commenttext'] }}</h6>
-            {% endif %}
-          </div>
-          {% endfor %}
-            <form method="post">
-                <textarea class="form-control" name="commenttext" rows="2" id="commenttext" placeholder="Insert Comment here, Remember to keep civil." maxlength="280"></textarea>
+              {% for comment in comments%}
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" value="save" >Submit comment</button>
-                </div>
-            </form>
+              {% if  post['id']  ==  comment['postid']  %}
+              <div class="about">by {{comment['username']}} on {{comment['cCreated'].strftime('%Y-%m-%d')}} </div>
+              <hr />
+              <h6 class="form-control">{{ comment['commenttext'] }}</h6>
+
+              {% endif %}
+
+
+
+              {% endfor %}
+          </div>
+          <form method="post">
+              <textarea class="form-control" name="commenttext" rows="2" id="commenttext" placeholder="Insert Comment here, Remember to keep civil." maxlength="280"></textarea>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  {% if g.user %}
+                  <button type="submit" class="btn btn-primary" value="save">Submit comment</button>
+                  {% else %}
+                  <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="You have to be logged in to post a comment" disabled>Submit comment</button>
+                  {% endif %}
+              </div>
+              <input type="hidden" id="ctid" name="ctid" value="{{post['id']}}">
+          </form>
+
       </div>
   </div>
 </div>

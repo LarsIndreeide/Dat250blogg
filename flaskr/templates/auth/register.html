@@ -13,18 +13,22 @@
         <div class="form-row mb-3">
             <div class="col">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
+                <input type="text" class="form-control" name="username" id="username" required minlength="3"  placeholder="User Name">
             </div>
             <div class="col">
                 <label for="password">Password</label>
-                <input type="Password" class="form-control" name="password" id="password" required placeholder="Password">
+                <input type="Password" class="form-control" name="password" id="password" minlength="1" pattern="(?=.*\d)(?=.*[\W_]).{7,}" required placeholder="Password">
             </div>
         </div>
         <div class="form-row mb-3">
             <div class="col">
                 <label for="email">E-Mail</label>
-                <input type="text" class="form-control" id="email" placeholder="Email">
+                <input type="text" class="form-control" name="email" id="email" required minlength="1" placeholder="Email">
             </div>
+            <div class="col">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control" name="name" id="name" required minlength="1" placeholder="Full Name">
+            </div> 
         </div>
         <div class="form-row mb-3">
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#rules">
