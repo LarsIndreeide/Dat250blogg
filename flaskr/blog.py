@@ -1,6 +1,6 @@
 
 from flask import (
-    Flask, Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, Flask
 )
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -8,7 +8,8 @@ import os
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
-UPLOAD_FOLDER = '../'
+import os
+
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 bp = Blueprint('blog', __name__)
 app = Flask(__name__, instance_relative_config=True)
@@ -22,6 +23,8 @@ def allowed_file(filename):
 
 @bp.route('/' , methods=('GET', 'POST', 'COMMENT'))
 def index():
+
+
     db = get_db( )
     posts = db.execute(
         'SELECT *'
@@ -48,7 +51,6 @@ def index():
         if error is not None:
             flash(error)
         else:
-
             db = get_db()
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
@@ -94,6 +96,15 @@ def post_comment():
 @login_required
 def create():
     if request.method == 'POST':
+
+        app = Flask(__name__, instance_relative_config=True)
+        try:
+            os.makedirs(app.instance_path)
+        except OSError:
+            pass
+
+
+
         title = request.form['title']
         body = request.form['body']
         body2 = request.form['body2']
@@ -117,13 +128,14 @@ def create():
 
         elif file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            uploadpath = os.path.join(app.instance_path, 'images')
             
+            file.save(os.path.join(uploadpath, filename))
             db = get_db()
             db.execute(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
                 ' VALUES (?, ?, ?, ?, ?, ?)',
-                (title, body, body2, pris, file.filename, g.user['id'] )
+                (title, body, body2, pris, filename, g.user['id'] )
             )
             db.commit()
             return redirect(url_for('blog.index'))
@@ -158,6 +170,7 @@ def update(id):
         body = request.form['body']
         body2 = request.form['body2']
         pris = request.form['pris']
+        file = request.files['file']
         error = None
 
         if not title:
@@ -165,12 +178,25 @@ def update(id):
 
         if error is not None:
             flash(error)
-        else:
+        
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+            
+        elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            uploadpath = os.path.join(app.instance_path, 'images')
+            
+            file.save(os.path.join(uploadpath, filename))
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?'
+                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?, file = ?'
                 ' WHERE id = ?',
-                (title, body, body2, pris, id)
+                (title, body, body2, pris, filename, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))
