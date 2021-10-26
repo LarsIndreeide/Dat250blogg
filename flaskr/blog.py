@@ -1,6 +1,6 @@
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, Flask
 )
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+import os
 
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 UPLOAD_FOLDER = ('/templates/blog/images')
@@ -23,6 +24,8 @@ def allowed_file(filename):
 
 @bp.route('/' , methods=('GET', 'POST', 'COMMENT'))
 def index():
+
+
     db = get_db( )
     posts = db.execute(
         'SELECT *'
@@ -46,8 +49,6 @@ def index():
         if error is not None:
             flash(error)
         else:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             db = get_db()
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
@@ -66,6 +67,15 @@ def index():
 @login_required
 def create():
     if request.method == 'POST':
+
+        app = Flask(__name__, instance_relative_config=True)
+        try:
+            os.makedirs(app.instance_path)
+        except OSError:
+            pass
+
+
+
         title = request.form['title']
         body = request.form['body']
         body2 = request.form['body2']
@@ -88,6 +98,10 @@ def create():
             return redirect(request.url)
 
         elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            uploadpath = os.path.join(app.instance_path, 'images')
+            
+            file.save(os.path.join(uploadpath, filename))
             db = get_db()
             db.execute(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
