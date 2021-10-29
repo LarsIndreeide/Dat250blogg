@@ -136,11 +136,15 @@ def get_post(id, check_author=True):
 def update(id):
     post = get_post(id)
 
+    app = Flask(__name__, instance_relative_config=True)
+       
+
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
         body2 = request.form['body2']
         pris = request.form['pris']
+        file = request.files['file']
         error = None
 
         if not title:
@@ -148,17 +152,31 @@ def update(id):
 
         if error is not None:
             flash(error)
-        else:
+        
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+            
+        elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            uploadpath = os.path.join(app.instance_path, 'images')
+            
+            file.save(os.path.join(uploadpath, filename))
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?'
+                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?, file = ?'
                 ' WHERE id = ?',
-                (title, body, body2, pris, id)
+                (title, body, body2, pris, file.filename, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))
 
     return render_template('blog/update.html', post=post)
+
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
