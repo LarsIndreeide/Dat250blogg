@@ -36,13 +36,10 @@ def index():
         ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
         ).fetchall()
-    print(comments)
     if request.method == 'POST':
         ctext = request.form['commenttext']
-
-        for post in posts:
-            print(post)
-
+        ctid = request.form['ctid']
+        
         error = None
 
         if not ctext:
@@ -55,14 +52,15 @@ def index():
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
                 ' VALUES (?, ?, ?)',
-                (ctext, g.user['id'], g.user['id'])
+                (ctext, ctid, g.user['id'])
             )
             db.commit()
-            return render_template('blog/index.html', posts=posts, comments=comments)
+            return redirect(url_for('blog.index'))
     else:
         return render_template('blog/index.html', posts=posts, comments=comments)
 
 
+<<<<<<< HEAD
 """
 @bp.route('/', methods=['GET', 'COMMENT'])ii
 @login_required
@@ -90,6 +88,8 @@ def post_comment():
             db.commit()
             return
 """
+=======
+>>>>>>> 6867e42e7cfb2a8bdd0412686e24c206d5ecf91a
 
 
 @bp.route('/create', methods=('GET', 'POST'))

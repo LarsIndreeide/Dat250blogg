@@ -14,6 +14,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        email = request.form['email']
         db = get_db()
         error = None
 
@@ -21,6 +22,8 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
+        elif not email:
+            error = 'Email is required.'
 
         if error is None:
             try:
@@ -28,9 +31,13 @@ def register():
                     "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password, salt_length=64)),
                 )
+                db.execute(
+                    "INSERT INTO email (mail) VALUES (?)",
+                    (email,)
+                    )
                 db.commit()
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = f"User {username} or email {email} is already registered."
             else:
                 return redirect(url_for("auth.login"))
 
@@ -95,4 +102,7 @@ def about():
     return render_template('auth/about.html')
 
 
+@bp.route('/profile')
+def profile():
+    return render_template('auth/profile.html')
 
