@@ -9,7 +9,7 @@ def create_app(test_config=None):
     
     app.config['SECRET_KEY']='dev'
 
-    app.config['DATABASE'] = "./flaskr/static/flaskr.sqlite"
+    app.config['DATABASE'] =  os.getenv('DATABASE_URL')
 
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
     
@@ -20,14 +20,6 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-
-
-        
-    @app.route('/slycooper')
-    def tierlist():
-        return 'sly cooper tier list coming soon!'
-
-    #return app
 
     from . import db
     db.init_app(app)
@@ -43,7 +35,5 @@ def create_app(test_config=None):
     from . import blog
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
-
-
 
     return app

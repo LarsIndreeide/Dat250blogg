@@ -54,7 +54,7 @@ def index():
             db = get_db()
             db.execute(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
-                ' VALUES (?, ?, ?)',
+                ' VALUES (%s, %s, %s)',
                 (ctext, ctid, g.user['id'])
             )
             db.commit()
@@ -111,7 +111,7 @@ def create():
             db = get_db()
             db.execute(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
-                ' VALUES (?, ?, ?, ?, ?, ?)',
+                ' VALUES (%s, %s, %s, %s, %s, %s)',
                 (title, body, body2, pris, file.filename, g.user['id'] )
             )
             db.commit()
@@ -125,7 +125,7 @@ def get_post(id, check_author=True):
     post = get_db().execute(
         'SELECT *'
         ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
+        ' WHERE p.id = %s',
         (id,)
     ).fetchone()
 
@@ -175,8 +175,8 @@ def update(id):
             file.save(os.path.join(uploadpath, filename))
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?, file = ?'
-                ' WHERE id = ?',
+                'UPDATE post SET title = %s, body = %s, body2 = %s, pris = %s, file = %s'
+                ' WHERE id = %s',
                 (title, body, body2, pris, file.filename, id)
             )
             db.commit()
@@ -190,7 +190,7 @@ def update(id):
 def delete(id):
     get_post(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
+    db.execute('DELETE FROM post WHERE id = %s', (id,))
     db.commit()
     return redirect(url_for('blog.index')) 
 
