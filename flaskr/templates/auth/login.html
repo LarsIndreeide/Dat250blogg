@@ -19,6 +19,12 @@
                 <input type="password" class="form-control" name="password" id="password" required placeholder="Password">
             </div>
         </div>
+        <div class=" form-row mb-3">
+            <form method="KPOP"> <!-- Sends POST request to flask server -->
+                {{ recaptcha }} <!-- Refer to 'recaptcha' variable in main.py -->
+            </form>
+            <p>{{ message }}</p>
+        </div>
         <div class="form-row mb3">
             <button type="submit" value="Log In" class="btn btn-primary">Log In</button>
         </div>

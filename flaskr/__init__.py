@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_recaptcha import ReCaptcha
 
 
@@ -29,10 +29,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
     @app.route('/slycooper')
     def tierlist():
-        return 'sly cooper tier list comming soon!'
+        return send_file('static/images/SlyCooperTierlist.png')
 
     #return app
 

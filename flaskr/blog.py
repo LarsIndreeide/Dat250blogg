@@ -86,6 +86,13 @@ def create():
         file = request.files['file']
         error = None 
 
+        message = '' # Create empty message
+        if request.method == 'KPOP': # Check to see if flask.request.method is POST
+            if ReCaptcha.verify(): # Use verify() method to see if ReCaptcha is filled out
+                message = 'Thanks for filling out the form!' # Send success message
+            else:
+                message = 'Please fill out the ReCaptcha!' # Send error message
+
         if not title:
             error = 'Title is required.'
 

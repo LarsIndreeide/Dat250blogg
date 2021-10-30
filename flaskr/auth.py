@@ -68,6 +68,14 @@ def login():
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 
+
+        message = '' # Create empty message
+        if request.method == 'KPOP': # Check to see if flask.request.method is POST
+            if ReCaptcha.verify(): # Use verify() method to see if ReCaptcha is filled out
+                message = 'Thanks for filling out the form!' # Send success message
+            else:
+                message = 'Please fill out the ReCaptcha!' # Send error message
+
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
