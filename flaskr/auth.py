@@ -1,5 +1,5 @@
 import functools
-
+from flask_recaptcha import ReCaptcha
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -14,14 +14,26 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        conf_password = request.form['conf_password']
         email = request.form['email']
         db = get_db()
         error = None
+        
+
+        message = '' # Create empty message
+        if request.method == 'KPOP': # Check to see if flask.request.method is POST
+            if ReCaptcha.verify(): # Use verify() method to see if ReCaptcha is filled out
+                message = 'Thanks for filling out the form!' # Send success message
+            else:
+                message = 'Please fill out the ReCaptcha!' # Send error message
 
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
+        elif password != conf_password:
+            error = 'The passwords you entered do not match.'
+
         elif not email:
             error = 'Email is required.'
 
@@ -39,7 +51,7 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} or email {email} is already registered."
             else:
-                return redirect(url_for("auth.login"))
+                return redirect(url_for("auth.login", message=message))
 
         flash(error)
 

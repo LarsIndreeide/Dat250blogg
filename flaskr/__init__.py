@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, request
+from flask_recaptcha import ReCaptcha
 
 
 def create_app(test_config=None):
@@ -11,6 +12,9 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+    app.config['RECAPTCHA_SITE_KEY'] = '6LceNwQdAAAAAAWqsl1cehaMvCQ8mNsE5h7xj5Cj'
+    app.config['RECAPTCHA_SECRET_KEY'] = '6LceNwQdAAAAAPpCrlpf8ZwKbWILexik4Y-A7QOR'
+    recaptcha = ReCaptcha(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
