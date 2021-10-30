@@ -16,14 +16,21 @@
                 <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
             </div>
             <div class="col">
+                <label for="email">E-Mail</label>
+                <input type="text" class="form-control" name="email" id="email" required placeholder="Email">
+            </div>
+            
+            
+        </div>
+        <div class="form-row mb-3">
+            
+            <div class="col">
                 <label for="password">Password</label>
                 <input type="Password" class="form-control" name="password" id="password" required placeholder="Password">
             </div>
-        </div>
-        <div class="form-row mb-3">
             <div class="col">
-                <label for="email">E-Mail</label>
-                <input type="text" class="form-control" name="email" id="email" required placeholder="Email">
+                <label for="conf_password">Confirm password</label>
+                <input type="password" class="form-control" name="conf_password"  required placeholder="Confirm password">
             </div>
         </div>
         <div class="form-row mb-3">
@@ -56,6 +63,13 @@
                 <input type="checkbox" class="custom-control-input" id="ruleslol">
                 <label class="custom-control-label" for="ruleslol">I have read the terms of service, and agree to the rules.</label>
             </div>
+        </div>
+
+        <div class=" form-row mb-3">
+            <form method="KPOP"> <!-- Sends POST request to flask server -->
+                {{ recaptcha }} <!-- Refer to 'recaptcha' variable in main.py -->
+            </form>
+            <p>{{ message }}</p>
         </div>
 
         <div class=" form-row mb-3">

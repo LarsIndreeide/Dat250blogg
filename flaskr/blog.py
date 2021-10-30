@@ -47,6 +47,7 @@ def index():
 
         if not ctext:
             error = 'Comment text is required.'
+        
 
         if error is not None:
             flash(error)
@@ -105,7 +106,6 @@ def create():
             print(uploadpath)
             #url = images.url(filename)
  
-            
             file.save(os.path.join(uploadpath, filename))
 
             db = get_db()
@@ -170,9 +170,12 @@ def update(id):
         elif file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
 
-            uploadpath = os.path.join('Dat250blogg/static/images', 'images')
+            uploadpath = os.path.join('./flaskr/static/', 'images')
             
+            #url = images.url(filename)
+ 
             file.save(os.path.join(uploadpath, filename))
+
             db = get_db()
             db.execute(
                 'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?, file = ?'
