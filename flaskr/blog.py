@@ -10,9 +10,11 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 import os
 
+
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 UPLOAD_FOLDER = ('/templates/blog/images')
 bp = Blueprint('blog', __name__)
+
 
 
 
@@ -99,9 +101,13 @@ def create():
 
         elif file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            uploadpath = os.path.join(app.instance_path, 'images')
+            uploadpath = os.path.join('./flaskr/static/', 'images')
+            print(uploadpath)
+            #url = images.url(filename)
+ 
             
             file.save(os.path.join(uploadpath, filename))
+
             db = get_db()
             db.execute(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
@@ -163,7 +169,8 @@ def update(id):
             
         elif file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            uploadpath = os.path.join(app.instance_path, 'images')
+
+            uploadpath = os.path.join('Dat250blogg/static/images', 'images')
             
             file.save(os.path.join(uploadpath, filename))
             db = get_db()
