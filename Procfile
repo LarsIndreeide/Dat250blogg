@@ -1,1 +1,1 @@
-web: python -c "from flaskr import init_db; init_db()"; gunicorn flaskr:app
+web: python -c "import flaskr from .db import init_db; init_db()"; gunicorn flaskr:app
