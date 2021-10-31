@@ -1,8 +1,8 @@
 import os
 from flask import Flask, request
+from flask.cli import with_appcontext
 
-
-
+app = Flask(__name__, instance_relative_config=True)
 
 def create_app(test_config=None):
     # create and configure the app
@@ -42,3 +42,17 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     return app
+
+
+def init_db():
+    db = get_db()
+    with current_app.open_resource('schema.sql', mode='r') as f:
+        db.cursor().execute(f.read())
+
+
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+    """Clear the existing data and create new tables."""
+    init_db()
+    click.echo('Initialized the database.')
