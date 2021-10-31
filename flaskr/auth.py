@@ -122,13 +122,42 @@ def about():
     return render_template('auth/about.html')
 
 
-@bp.route('/profile')
+@bp.route('/profile', methods=('GET', 'POST'))
 def profile():
+    
     db = get_db( )
     email = db.execute(
         'SELECT *'
         ' FROM email e JOIN user u ON e.uid = u.id'
         ' ORDER BY eCreated DESC'
         ).fetchall()
+    
+    
+    
+    if request.method == 'POST':
+        password = request.form['password']
+        conf_password = request.form['conf_password']
+        error = None
+
+        if not password:
+            error = 'Password is required.'
+        elif password != conf_password:
+            error = 'The passwords you entered do not match.'
+
+
+        if error is None:
+            
+            db.execute(
+                'UPDATE user SET password = ?',
+                [generate_password_hash(password, salt_length=64)],
+            )
+            
+            db.commit()
+        else:
+            return redirect(url_for("auth.login", email=email))
     return render_template('auth/profile.html', email=email)
+
+        
+
+    
 

@@ -13,54 +13,50 @@
 
 
 <div class="jumbotron jumbotron-fluid">
-  <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
+
   <div class="container">
     <h1 class="display-4">User info about: {{ g.user['username'] }}</h1>
     <p class="lead"></p>
-    {% for email in email %}
+    
       <p class="lead">Username: {{ g.user['username']}}</p>
+    {% for email in email %}
+    {% if  g.user['id'] ==  email['uid']  %}
       <div class="lead" id="{{ email['uid'] }}">Email: {{email['mail']}} </div>
       
       <p class="lead">
+    {% endif %}
     {% endfor %}
-      <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-      <h3 class="display-4"><img src="/static/images/logo.png" width="250" height="250" class="d-inline-block align-mid">
+    <div class="form-row mb-3">
+      <form method="post">         
+          
+            <div class="row mb-3"></div>
+            <div class="row mb-3"></div>
+          <h3 class="haha">Change password:</h3>
+          <div class="form-row mb-3"></div>
+          <div class="col">
+            <label for="password">New password</label>
+            <input type="Password" class="form-control" name="password" id="password" required placeholder="Password">
+          </div>
+          <div class="col">
+            <label for="conf_password">Confirm new password</label>
+            <input type="password" class="form-control" name="conf_password"  required placeholder="Confirm password">
+          </div>
+          </div>
+          <div class=" form-row mb-3">
+            <button type="submit" value="Register" class="btn btn-primary">Save</button>
+          </div>
+      </form>
+ 
+      <h3 class="display-4"><img src="/static/images/logo.png" width="330" height="330" class="d-inline-block align-mid">
    
   </div>
-  <div class="row mb-3"></div>
-  <div class="row mb-3"></div>
+
         <div class="row mb-3"></div>
+
+
         <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
+
+    
         
         
 </div>
@@ -69,15 +65,7 @@
         <div class="row mb-3"></div>
         <div class="row mb-3"></div>
         <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
-        <div class="row mb-3"></div>
+  
         
         
         
