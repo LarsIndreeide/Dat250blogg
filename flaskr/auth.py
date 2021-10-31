@@ -1,8 +1,9 @@
 import functools
 from flask_recaptcha import ReCaptcha
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, escape
 )
+import re
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
@@ -12,12 +13,15 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        conf_password = request.form['conf_password']
-        email = request.form['email']
+        username = escape(request.form['username'])
+        password = escape(request.form['password'])
+        conf_password = escape(request.form['conf_password'])
+        email = escape(request.form['email'])
         db = get_db()
         error = None
+        usregex = re.compile('[^0-9a-zA-Z]+')
+        pwregex = re.compile('(?=^.{12,100}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[|!\"$%&\/\(\)\?\^\'\\\+\-\*]))^.*')
+        emregex = re.compile('^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$')
         
 
         message = '' # Create empty message
@@ -27,13 +31,20 @@ def register():
             else:
                 message = 'Please fill out the ReCaptcha!' # Send error message
 
+        if usregex.search(username):
+            error = "Usernames cannot contain special symbols"
+        elif pwregex.search(password):
+            error = "Password must contain atleast 1 Special symbol, 1 Capital letter, 1 lower case letter and be atleast 12 characters long. Some symbols are also not allowed due to being possible escape symbols."
+        elif emregex.search(email):
+            error = "Email must be a valid email."
+
+
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
         elif password != conf_password:
             error = 'The passwords you entered do not match.'
-
         elif not email:
             error = 'Email is required.'
 
@@ -60,10 +71,14 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = escape(request.form['username'])
+        password = escape(request.form['password'])
         db = get_db()
         error = None
+        usregex = re.compile('[^0-9a-zA-Z]+')
+
+        pwregex = re.compile('(?=^.{12,100}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[|!\"$%&\/\(\)\?\^\'\\\+\-\*]))^.*')
+
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
@@ -75,6 +90,12 @@ def login():
                 message = 'Thanks for filling out the form!' # Send success message
             else:
                 message = 'Please fill out the ReCaptcha!' # Send error message
+
+
+        if usregex.search(username):
+            error = "Incorrect username."
+        elif pwregex.search(password):
+            error = "Incorrect password."
 
         if user is None:
             error = 'Incorrect username.'

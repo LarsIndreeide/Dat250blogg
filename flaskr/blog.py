@@ -41,8 +41,8 @@ def index():
         ).fetchall()
 
     if request.method == 'POST':
-        ctext = request.form['commenttext']
-        ctid = request.form['ctid']
+        ctext = escape.request.form['commenttext']
+        ctid = escape.request.form['ctid']
         
         error = None
         strin = " "
@@ -82,12 +82,19 @@ def create():
 
 
 
-        title = request.form['title']
-        body = request.form['body']
-        body2 = request.form['body2']
-        pris = request.form['pris']
-        file = request.files['file']
+        title = escape(request.form['title'])
+        body = escape(request.form['body'])
+        body2 = escape(request.form['body2'])
+        pris = escape(request.form['pris'])
+        file = escape(request.files['file'])
         error = None 
+
+
+        prregex = re.compile('^([0-9.])')
+
+        if prregex.search(pris):
+            error = "Pris må vere tall"
+
 
         message = '' # Create empty message
         if request.method == 'KPOP': # Check to see if flask.request.method is POST
@@ -163,12 +170,18 @@ def update(id):
        
 
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        body2 = request.form['body2']
-        pris = request.form['pris']
-        file = request.files['file']
+        title = escape(request.form['title'])
+        body = escape(request.form['body'])
+        body2 = escape(request.form['body2'])
+        pris = escape(request.form['pris'])
+        file = escape(request.files['file'])
         error = None
+
+
+        prregex = re.compile('^([0-9.])')
+
+        if prregex.search(pris):
+            error = "Pris må vere tall"
 
         if not title:
             error = 'Title is required.'
