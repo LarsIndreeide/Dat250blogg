@@ -8,7 +8,7 @@ from flask.cli import with_appcontext
 
 def get_db():
     if 'db' not in g:
-        g.db = db = psycopg2.with_appcontext.config['DATABASE'], user="postgres", password="lars" )
+        g.db = db = psycopg2.current_app.config['DATABASE'], user="postgres", password="lars" )
     return g.db
 
 
@@ -19,7 +19,7 @@ def close_db(e=None):
 
 def init_db():
     db = get_db()
-    with with_appcontext.open_resource('schema.sql', mode='r') as f:
+    with current_app.open_resource('schema.sql', mode='r') as f:
         db.cursor().execute(f.read())
 
 
