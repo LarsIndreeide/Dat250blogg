@@ -8,7 +8,7 @@ from flask.cli import with_appcontext
 
 def get_db():
     if 'db' not in g:
-        g.db = db = psycopg2.connect(current_app.config['DATABASE'])
+        g.db = db = psycopg2.connect(current_app.config['DATABASE'], user="postgres", password="lars" )
     return g.db
 
 
@@ -33,3 +33,10 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+def query_db(query, args=(), one=False):
+    cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv

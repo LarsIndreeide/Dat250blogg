@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
+from flaskr.db import get_db, query_db
 import os
 
 
@@ -27,14 +27,14 @@ def index():
 
 
     db = get_db( )
-    posts = db.execute(
+    posts = query_db(
         'SELECT *'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' FROM post p JOIN users u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    comments = db.execute(
+    comments = query_db(
         'SELECT *'
-        ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
+        ' FROM comment c JOIN users u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
         ).fetchall()
     if request.method == 'POST':
@@ -50,7 +50,7 @@ def index():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            query_db(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
                 ' VALUES (%s, %s, %s)',
                 (ctext, ctid, g.user['id'])
@@ -107,7 +107,7 @@ def create():
             file.save(os.path.join(uploadpath, filename))
 
             db = get_db()
-            db.execute(
+            query_db(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
                 ' VALUES (%s, %s, %s, %s, %s, %s)',
                 (title, body, body2, pris, file.filename, g.user['id'] )
@@ -122,7 +122,7 @@ def create():
 def get_post(id, check_author=True):
     post = get_db().execute(
         'SELECT *'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' FROM post p JOIN users u ON p.author_id = u.id'
         ' WHERE p.id = %s',
         (id,)
     ).fetchone()
