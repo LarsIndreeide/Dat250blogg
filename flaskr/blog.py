@@ -44,6 +44,8 @@ def index():
         ctid = request.form['ctid']
         
         error = None
+        strin = " "
+        ctext =  ctext + strin
 
         if not ctext:
             error = 'Comment text is required.'
