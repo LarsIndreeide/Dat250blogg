@@ -4,12 +4,14 @@ import os
 from flask import Flask, request
 
 
-app = Flask(__name__, instance_relative_config=True)
-def create_app(test_config=None):
+
+app = create_app
+
+def create_app():
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
-    app.config['SECRET_KEY']='dev'
+    app.config['SECRET_KEY']= os.getenv('SECRET_KEY')
 
     app.config['DATABASE'] =  os.getenv('DATABASE_URL') #
 
