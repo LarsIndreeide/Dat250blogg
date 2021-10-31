@@ -42,17 +42,3 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     return app
-
-
-def init_db():
-    db = get_db()
-    with current_app.open_resource('schema.sql', mode='r') as f:
-        db.cursor().execute(f.read())
-
-
-@click.command('init-db')
-@with_appcontext
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
