@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, request
 
+import db
+
 app = Flask(__name__, instance_relative_config=True)
 def create_app(test_config=None):
     # create and configure the app
