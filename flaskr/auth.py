@@ -13,24 +13,21 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
+        db = get_db()
+        error = None
+
         username = escape(request.form['username'])
         password = escape(request.form['password'])
         conf_password = escape(request.form['conf_password'])
+
         email = escape(request.form['email'])
-        db = get_db()
-        error = None
         usregex = re.compile('[^0-9a-zA-Z]+')
         pwregex = re.compile('(?=^.{12,}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[|!\"$%&\/\(\)\?\^\'\\\+\-\*]))^.*')
-        
 
         if usregex.search(username):
             error = "Usernames cannot contain special symbols"
-
         if pwregex.search(password):
             error = "Password must contain atleast 1 Special symbol, 1 Capital letter, 1 lower case letter and be atleast 12 characters long. Some symbols are also not allowed due to being possible escape symbols."
-        
-
-
         if pwregex.search(conf_password):
             error = "Passwords must match"
 
@@ -79,8 +76,10 @@ def login():
         db = get_db()
         error = None
         usregex = re.compile('[^0-9a-zA-Z]+')
+        pwregex = re.compile('(?=^.{6,}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[|!$%&\(\)\?\^\\\+\-\*]))^.*')
+        if pwregex.search(password):
+            error = "Incorrect password."
 
-        pwregex = re.compile('(?=^.{12,}$)((?=.*\w)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[|!\"$%&\/\(\)\?\^\'\\\+\-\*]))^.*')
 
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
@@ -98,8 +97,7 @@ def login():
         if usregex.search(username):
             error = "Incorrect username."
         
-        if pwregex.search(password):
-            error = "Incorrect password."
+        
 
         if user is None:
             error = 'Incorrect username.'

@@ -81,19 +81,17 @@ def create():
             pass
 
 
-
+        error = None 
         title = escape(request.form['title'])
         body = escape(request.form['body'])
         body2 = escape(request.form['body2'])
         pris = escape(request.form['pris'])
         file = escape(request.files['file'])
-        error = None 
-
 
         prregex = re.compile('^([0-9.])')
 
         if prregex.search(pris):
-            error = "Pris må vere tall"
+            error = "Price needs to be a number"
 
 
         message = '' # Create empty message
