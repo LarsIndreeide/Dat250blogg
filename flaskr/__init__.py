@@ -1,11 +1,9 @@
-from flaskr.db import init_db, init_db_command
 import os
+from flask import Flask, request, escape
+from flaskr.db import init_db, init_db_command
 
-from flask import Flask, request
 
-
-
-app = create_app
+app = Flask(__name__, instance_relative_config=True)
 
 def create_app():
     # create and configure the app
