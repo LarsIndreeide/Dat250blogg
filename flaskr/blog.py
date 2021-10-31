@@ -39,6 +39,7 @@ def index():
         ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
         ).fetchall()
+
     if request.method == 'POST':
         ctext = request.form['commenttext']
         ctid = request.form['ctid']

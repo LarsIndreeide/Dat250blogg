@@ -124,5 +124,11 @@ def about():
 
 @bp.route('/profile')
 def profile():
-    return render_template('auth/profile.html')
+    db = get_db( )
+    email = db.execute(
+        'SELECT *'
+        ' FROM email e JOIN user u ON e.uid = u.id'
+        ' ORDER BY eCreated DESC'
+        ).fetchall()
+    return render_template('auth/profile.html', email=email)
 
