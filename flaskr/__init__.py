@@ -2,10 +2,9 @@ import os
 from flask import Flask, request, escape
 from flaskr.db import init_db, init_db_command
 
-
 app = Flask(__name__, instance_relative_config=True)
 
-def create_app():
+def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
@@ -25,6 +24,11 @@ def create_app():
 
     from . import db
     db.init_app(app)
+
+
+    @app.route('/slycooper')
+    def tierlist():
+        return ('static/images/SlyCooperTierlist.png')
 
     #return app
 
