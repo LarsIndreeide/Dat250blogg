@@ -1,8 +1,6 @@
 import os
 from flask import Flask, request
 from flask.cli import with_appcontext
-import click
-
 
 app = Flask(__name__, instance_relative_config=True)
 
