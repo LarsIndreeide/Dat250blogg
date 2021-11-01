@@ -31,12 +31,12 @@ def index():
         'SELECT *'
         ' FROM post p JOIN users u ON p.author_id = u.id'
         ' ORDER BY created DESC'
-    ).fetchall()
+    )
     comments = query_db(
         'SELECT *'
         ' FROM comment c JOIN users u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
-        ).fetchall()
+        )
     if request.method == 'POST':
         ctext = request.form['commenttext']
         ctid = request.form['ctid']
@@ -139,10 +139,6 @@ def get_post(id, check_author=True):
 @login_required
 def update(id):
     post = get_post(id)
-
-    app = Flask(__name__, instance_relative_config=True)
-       
-
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
