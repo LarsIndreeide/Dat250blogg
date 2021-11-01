@@ -133,11 +133,15 @@ def profile():
         ).fetchall()
     
     
-    
+    user_id = session.get('user_id')
     if request.method == 'POST':
         password = request.form['password']
         conf_password = request.form['conf_password']
         error = None
+        g.user = get_db().execute(
+            'SELECT * FROM user WHERE id = ?', (user_id,)
+        ).fetchone()
+        
 
         if not password:
             error = 'Password is required.'
@@ -148,12 +152,13 @@ def profile():
         if error is None:
             
             db.execute(
-                'UPDATE user SET password = ?',
-                [generate_password_hash(password, salt_length=64)],
-            )
+                'UPDATE user SET password = ?'
+                'where id = ?',
+                [g.user['id'] , generate_password_hash(password, salt_length=64)]
+            ).fetchone()
             
             db.commit()
-        else:
+
             return redirect(url_for("auth.login", email=email))
     return render_template('auth/profile.html', email=email)
 
