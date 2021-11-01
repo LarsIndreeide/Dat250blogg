@@ -52,9 +52,11 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = query_db(
-            'SELECT * FROM users WHERE username = %s', (username,)
-        )
+        user = db.execute(
+            'SELECT * FROM user WHERE username = %s', (username,)
+        ).fetchone()
+
+
 
         if user is None:
             error = 'Incorrect username.'
