@@ -9,7 +9,7 @@ import os
 def get_db():
     if 'db' not in g:
         g.db = db = psycopg2.connect(os.getenv('DATABASE_URL'))
-    return g.db
+    return g.db , db
 
 
 def close_db(e=None):

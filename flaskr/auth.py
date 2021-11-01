@@ -52,15 +52,19 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.execute(
+        cursor = db.cursor()
+        user = cursor.execute(
             'SELECT * FROM user WHERE username = %s', (username,)
-        ).fetchone()
+        )
+        userres = cursor.fetchone()
+        cursor.close()
+        db.close()
 
 
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
+        elif not check_password_hash(userres['password'], password):
             error = 'Incorrect password.'
 
         if error is None:
