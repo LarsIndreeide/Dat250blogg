@@ -33,7 +33,7 @@
           </div>
           {% if g.user['id'] == post['author_id']  or g.user['id']==1 %}
           <div class="mx-auto" style="width: 300px;">
-            <a class="action2" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+            <a class="action2" href="{{ url_for('blog.update', id=post['pid']) }}">Edit</a>
           </div>
           {% endif %}
         </header>
@@ -45,7 +45,7 @@
         </div>
       </article>
       <div class="mx-auto" style="width: 300px;">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ post['id'] }}">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ post['pid'] }}">
         See More
       </button>
       </div>
@@ -62,11 +62,11 @@
     
 
   </div>
-<div class="modal fade" id="{{ post['id'] }}" tabindex="-1" role="dialog" aria-labelledby="{{ post['id'] }}" aria-hidden="true">
+<div class="modal fade" id="{{ post['pid'] }}" tabindex="-1" role="dialog" aria-labelledby="{{ post['pid'] }}" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <h3 class="modal-title" id="{{ post['id'] }}">{{ post['title'] }}</h3>
+              <h3 class="modal-title" id="{{ post['pid'] }}">{{ post['title'] }}</h3>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
@@ -78,7 +78,7 @@
 
               {% if g.user['id'] == post['author_id'] %}
               <div class="mx-auto" style="width: 1600px;">
-                  <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+                  <a class="action" href="{{ url_for('blog.update', id=post['pid']) }}">Edit</a>
               </div>
               {% endif %}
               <hr>
@@ -98,17 +98,13 @@
           <hr />
           <div class="modal-body">
               {% for comment in comments%}
-
-              {% if  post['id']  ==  comment['postid']  %}
+                  {% if  post['pid']  ==  comment['postid']  %}
               
-              <hr />
-              <h6 class="form-control">{{ comment['commenttext'] }}</h6>
-              <div class="about">by {{comment['username']}} on {{comment['ccreated'].strftime('%Y-%m-%d')}} </div>
+                  <hr />
+                  <h6 class="form-control">{{ comment['commenttext'] }}</h6>
+                  <div class="about">by {{comment['username']}} on {{comment['ccreated'].strftime('%Y-%m-%d')}} </div>
 
-              {% endif %}
-
-
-
+                  {% endif %}
               {% endfor %}
           </div>
           <form method="post">
@@ -121,7 +117,7 @@
                   <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="You have to be logged in to post a comment" disabled>Submit comment</button>
                   {% endif %}
               </div>
-              <input type="hidden" id="ctid" name="ctid" value="{{post['id']}}">
+              <input type="hidden" id="ctid" name="ctid" value="{{post['pid']}}">
           </form>
 
       </div>
