@@ -36,8 +36,9 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 def query_db(query, args=(), one=False):
+    conn = get_db()
     cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(query, args)
-    rv = cur.fetchall()
+    conn.commit()
     cur.close()
     return (rv[0] if rv else None) if one else rv

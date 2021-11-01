@@ -9,7 +9,7 @@ def create_app(test_config=None):
     app.config['SECRET_KEY']= os.getenv('SECRET_KEY')
 
     app.config['DATABASE'] =  os.getenv('DATABASE_URL') #
-    print(os.getenv('DATABASE_URL'))
+
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
     
     if test_config is None:
