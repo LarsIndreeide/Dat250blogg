@@ -37,7 +37,7 @@ def register():
                     )
                 db.execute()
             except db.IntegrityError:
-                error = f"User {username} or email {email} is already registered."
+                return redirect(url_for("auth.login"))
             else:
                 return redirect(url_for("auth.login"))
 
@@ -50,15 +50,9 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-        cursor = db.cursor()
-        user = cursor.execute(
-            'SELECT * FROM users WHERE username = %s', (username,)
-        )
-        userres = cursor.fetchone()
-        cursor.close()
-        db.close()
+        user = query_db('SELECT * FROM users WHERE username = %s', (username,), True)
+
 
 
 
