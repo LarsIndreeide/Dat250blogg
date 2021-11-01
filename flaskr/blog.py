@@ -120,12 +120,11 @@ def create():
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
-    post = get_db().execute(
+    post = query_db(
         'SELECT *'
         ' FROM post p JOIN users u ON p.author_id = u.id'
         ' WHERE p.id = %s',
-        (id,)
-    ).fetchone()
+        (id,),True)
 
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")

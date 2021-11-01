@@ -77,9 +77,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().query_db(
-            'SELECT * FROM users WHERE id = %s', (user_id,)
-        )
+        g.user =query_db('SELECT * FROM users WHERE id = %s', (user_id,),True)
 
 @bp.route('/logout')
 def logout():
