@@ -119,8 +119,44 @@ def login_required(view):
 def about():
     return render_template('auth/about.html')
 
+@bp.route('/about')
+def about():
+    return render_template('auth/about.html')
 
-@bp.route('/profile')
+
+@bp.route('/profile', methods=('GET', 'POST'))
 def profile():
-    return render_template('auth/profile.html')
+    
+    db = get_db( )
+    email = db.execute(
+        'SELECT *'
+        ' FROM email e JOIN user u ON e.uid = u.id'
+        ' ORDER BY eCreated DESC'
+        ).fetchall()
+    
+    
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        password = request.form['password']
+        conf_password = request.form['conf_password']
+        error = None
+        g.user = query_db('SELECT * FROM user WHERE id = %s', (user_id,), True )
+        
 
+        if not password:
+            error = 'Password is required.'
+        elif password != conf_password:
+            error = 'The passwords you entered do not match.'
+
+
+        if error is None:
+            
+            insert_db(
+                'UPDATE user SET password = ?'
+                'where id = ?',
+                [g.user['id'] , generate_password_hash(password, salt_length=64)], True)
+            
+            db.commit()
+
+            return redirect(url_for("auth.login", email=email))
+    return render_template('auth/profile.html', email=email)
