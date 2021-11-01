@@ -52,9 +52,9 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.query_db(
+        user = query_db(
             'SELECT * FROM users WHERE username = %s', (username,)
-        ).fetchone()
+        )
 
         if user is None:
             error = 'Incorrect username.'
@@ -79,7 +79,7 @@ def load_logged_in_user():
     else:
         g.user = get_db().query_db(
             'SELECT * FROM users WHERE id = %s', (user_id,)
-        ).fetchone()
+        )
 
 @bp.route('/logout')
 def logout():
