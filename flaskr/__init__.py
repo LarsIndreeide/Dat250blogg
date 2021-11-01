@@ -1,5 +1,7 @@
 import os
-from flask import Flask, request
+from flask import Flask, request, send_file
+from flask_recaptcha import ReCaptcha
+from flask_paranoid import Paranoid
 
 
 def create_app(test_config=None):
@@ -12,6 +14,14 @@ def create_app(test_config=None):
 
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
     
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+    app.config['RECAPTCHA_SITE_KEY'] = '6LceNwQdAAAAAAWqsl1cehaMvCQ8mNsE5h7xj5Cj'
+    app.config['RECAPTCHA_SECRET_KEY'] = '6LceNwQdAAAAAPpCrlpf8ZwKbWILexik4Y-A7QOR'
+    recaptcha = ReCaptcha(app)
+    paranoid = Paranoid(app)
+    paranoid.redirect_view = '/'
+
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
