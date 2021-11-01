@@ -34,7 +34,7 @@ def index():
     )
     comments = query_db(
         'SELECT *'
-        ' FROM comment c JOIN users u ON c.cAuthor_id = u.id'
+        ' FROM comment c JOIN users u ON c.cauthor_id = u.id'
         ' ORDER BY cCreated DESC'
         )
     if request.method == 'POST':
@@ -54,7 +54,7 @@ def index():
         else:
             db = get_db()
             insert_db(
-                'INSERT INTO comment (commenttext, postid, cAuthor_id)'
+                'INSERT INTO comment (commenttext, postid, cauthor_id)'
                 ' VALUES (%s, %s, %s)',
                 (ctext, ctid, g.user['id'])
             )
