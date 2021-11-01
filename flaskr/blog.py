@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 
 from flaskr.auth import login_required
-from flaskr.db import get_db, query_db
+from flaskr.db import get_db, query_db, insert_db
 import os
 
 
@@ -50,7 +50,7 @@ def index():
             flash(error)
         else:
             db = get_db()
-            query_db(
+            insert_db(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
                 ' VALUES (%s, %s, %s)',
                 (ctext, ctid, g.user['id'])
@@ -107,7 +107,7 @@ def create():
             file.save(os.path.join(uploadpath, filename))
 
             db = get_db()
-            query_db(
+            insert_db(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
                 ' VALUES (%s, %s, %s, %s, %s, %s)',
                 (title, body, body2, pris, file.filename, g.user['id'] )
@@ -172,7 +172,7 @@ def update(id):
             
             file.save(os.path.join(uploadpath, filename))
             db = get_db()
-            db.execute(
+            insert_db(
                 'UPDATE post SET title = %s, body = %s, body2 = %s, pris = %s, file = %s'
                 ' WHERE id = %s',
                 (title, body, body2, pris, file.filename, id)

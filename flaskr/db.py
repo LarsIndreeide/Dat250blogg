@@ -36,9 +36,15 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 def query_db(query, args=(), one=False):
-    conn = get_db()
     cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+def insert_db(query, args=()):
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(query, args)
     conn.commit()
     cur.close()
-    return (rv[0] if rv else None) if one else rv
