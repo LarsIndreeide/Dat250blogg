@@ -5,10 +5,10 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from flaskr.db import get_db
+from flaskr.db import get_db, query_db, insert_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
+#test
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -39,17 +39,17 @@ def register():
 
         if error is None:
             try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
+                insert_db(
+                    "INSERT INTO users (username, password) VALUES (%s, %s)",
                     (username, generate_password_hash(password, salt_length=64)),
                 )
-                db.execute(
-                    "INSERT INTO email (mail) VALUES (?)",
+                insert_db(
+                    "INSERT INTO email (mail) VALUES (%s)",
                     (email,)
                     )
-                db.commit()
+                db.execute()
             except db.IntegrityError:
-                error = f"User {username} or email {email} is already registered."
+                return redirect(url_for("auth.login"))
             else:
                 return redirect(url_for("auth.login", message=message))
 
@@ -62,11 +62,11 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+        user = query_db('SELECT * FROM users WHERE username = %s', (username,), True)
+
+
+
 
 
         message = '' # Create empty message
@@ -97,9 +97,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.user =query_db('SELECT * FROM users WHERE id = %s', (user_id,),True)
 
 @bp.route('/logout')
 def logout():

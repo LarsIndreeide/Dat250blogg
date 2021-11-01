@@ -7,15 +7,13 @@ from werkzeug.utils import secure_filename
 
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
+from flaskr.db import get_db, query_db, insert_db
 import os
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 UPLOAD_FOLDER = ('/templates/blog/images')
 bp = Blueprint('blog', __name__)
-
-
 
 
 
@@ -29,16 +27,16 @@ def index():
 
 
     db = get_db( )
-    posts = db.execute(
+    posts = query_db(
         'SELECT *'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' FROM post p JOIN users u ON p.author_id = u.id'
         ' ORDER BY created DESC'
-    ).fetchall()
-    comments = db.execute(
+    )
+    comments = query_db(
         'SELECT *'
-        ' FROM comment c JOIN user u ON c.cAuthor_id = u.id'
+        ' FROM comment c JOIN users u ON c.cAuthor_id = u.id'
         ' ORDER BY cCreated DESC'
-        ).fetchall()
+        )
     if request.method == 'POST':
         ctext = request.form['commenttext']
         ctid = request.form['ctid']
@@ -55,9 +53,9 @@ def index():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            insert_db(
                 'INSERT INTO comment (commenttext, postid, cAuthor_id)'
-                ' VALUES (?, ?, ?)',
+                ' VALUES (%s, %s, %s)',
                 (ctext, ctid, g.user['id'])
             )
             db.commit()
@@ -118,9 +116,9 @@ def create():
             file.save(os.path.join(uploadpath, filename))
 
             db = get_db()
-            db.execute(
+            insert_db(
                 'INSERT INTO post (title, body, body2, pris, file, author_id)'
-                ' VALUES (?, ?, ?, ?, ?, ?)',
+                ' VALUES (%s, %s, %s, %s, %s, %s)',
                 (title, body, body2, pris, file.filename, g.user['id'] )
             )
             db.commit()
@@ -131,12 +129,11 @@ def create():
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
-    post = get_db().execute(
+    post = query_db(
         'SELECT *'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
-        (id,)
-    ).fetchone()
+        ' FROM post p JOIN users u ON p.author_id = u.id'
+        ' WHERE p.id = %s',
+        (id,),True)
 
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")
@@ -157,10 +154,6 @@ def get_post(id, check_author=True):
 @login_required
 def update(id):
     post = get_post(id)
-
-    app = Flask(__name__, instance_relative_config=True)
-       
-
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -193,9 +186,9 @@ def update(id):
             file.save(os.path.join(uploadpath, filename))
 
             db = get_db()
-            db.execute(
-                'UPDATE post SET title = ?, body = ?, body2 = ?, pris = ?, file = ?'
-                ' WHERE id = ?',
+            insert_db(
+                'UPDATE post SET title = %s, body = %s, body2 = %s, pris = %s, file = %s'
+                ' WHERE id = %s',
                 (title, body, body2, pris, file.filename, id)
             )
             db.commit()
@@ -209,7 +202,7 @@ def update(id):
 def delete(id):
     get_post(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
+    db.execute('DELETE FROM post WHERE id = %s', (id,))
     db.commit()
     return redirect(url_for('blog.index')) 
 
