@@ -6,7 +6,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
-    app.config['SECRET_KEY']= os.getenv('SECRET_KEY')
+    app.config['SECRET_KEY']= os.getenv('SECUREKEY_JADE_KEY')
 
     app.config['DATABASE'] =  os.getenv('DATABASE_URL') #
 
